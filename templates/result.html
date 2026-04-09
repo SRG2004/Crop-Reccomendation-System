@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result - Crop Recommendation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .top-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .crop-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+        }
+        .crop-card:hover {
+            transform: translateY(-4px);
+        }
+        .crop-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .crop-card-content {
+            padding: 14px 18px;
+            text-align: center;
+        }
+        .crop-rank {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+        .crop-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #166534;
+            margin: 2px 0;
+        }
+        .crop-confidence {
+            margin-top: 6px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .confidence-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+            border-radius: 4px;
+            transition: width 0.5s ease-in;
+        }
+        .error-box {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            color: #991b1b;
+        }
+
+        /* Soil Analysis Badges */
+        .soil-badges {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .soil-badges h3 {
+            color: #166534;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .badge {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            animation: fadeInUp 0.5s ease both;
+        }
+        .badge:nth-child(1) { animation-delay: 0.1s; }
+        .badge:nth-child(2) { animation-delay: 0.2s; }
+        .badge:nth-child(3) { animation-delay: 0.3s; }
+        .badge:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Overlay -->
+    <div class="overlay" id="loader">
+        <div class="spinner"></div>
+        <div class="overlay-text">Analyzing Soil Data</div>
+        <div class="overlay-subtext">Finding the best crops for your conditions...</div>
+    </div>
+
+    <div class="container">
+        <h2>Top 3 Crop Recommendations</h2>
+        <p class="description">Based on your soil and environmental data, here are the most suitable crops.</p>
+
+        {% if top_predictions %}
+
+        <!-- Soil Analysis Badges -->
+        {% if soil_analysis %}
+        <div class="soil-badges">
+            <h3>Soil & Environment Breakdown</h3>
+            <div class="badges-row">
+                {% for info in soil_analysis %}
+                <div class="badge">{{ info }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="top-grid">
+            {% for item in top_predictions %}
+            <div class="crop-card">
+                {% set img_path = 'crops/' + item.image + '.jpg' %}
+                <img src="{{ url_for('static', filename=img_path) }}" alt="{{ item.crop }}" onerror="this.src='{{ url_for('static', filename='crops/default.jpg') }}'">
+                <div class="crop-card-content">
+                    <div class="crop-rank">#{{ item.rank }} Recommendation</div>
+                    <div class="crop-name">{{ item.crop }}</div>
+                    <div class="crop-confidence" style="color: {% if loop.first %}#16a34a{% else %}#6b7280{% endif %}">
+                        Confidence: {{ item.confidence }}%
+                    </div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: {{ item.confidence }}%"></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% elif error %}
+        <div class="error-box">
+            <p>Error occurred: {{ error }}</p>
+        </div>
+        {% else %}
+        <div class="error-box">
+            <p>Model not found. Please train the model first by running <code>python build_model.py</code></p>
+        </div>
+        {% endif %}
+
+        <a href="/" class="btn-secondary">← Try Again</a>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                setTimeout(function() {
+                    loader.style.animation = 'fadeOut 0.5s ease forwards';
+                    setTimeout(function() { loader.style.display = 'none'; }, 500);
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
