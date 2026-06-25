@@ -21,6 +21,6 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          huggingface-cli login --token $HF_TOKEN
+          hf auth login --token $HF_TOKEN
           # Upload only backend files to avoid binary/image errors and save space
-          huggingface-cli upload SRG4545/crop-recommendation-api . . --repo-type space --exclude "frontend/*" "static/*" "dataset/*" "templates/*" ".github/*" ".claude/*"
+          hf upload SRG4545/crop-recommendation-api . . --repo-type space --exclude "frontend/*" "static/*" "dataset/*" "templates/*" ".github/*" ".claude/*"
