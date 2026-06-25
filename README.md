@@ -1,3 +1,12 @@
+---
+title: Crop Recommendation API
+emoji: 🌱
+colorFrom: green
+colorTo: blue
+sdk: docker
+pinned: false
+---
+
 # Crop Recommendation System 🌱
 
 An end-to-end Machine Learning web application to predict the most suitable crop based on soil testing and environmental parameters.
