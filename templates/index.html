@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 11px;
+            cursor: help;
+            margin-left: 6px;
+            position: relative;
+            font-weight: 700;
+            vertical-align: middle;
+        }
+        .tooltip-icon:hover::after,
+        .tooltip-icon:focus::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 400;
+            white-space: normal;
+            width: 220px;
+            line-height: 1.4;
+            z-index: 100;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .tooltip-icon:hover::before,
+        .tooltip-icon:focus::before {
+            content: '';
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 Crop Recommendation AI</h1>
+        <p class="description">Enter soil and environmental parameters to predict the most suitable crop for your condition.</p>
+
+        <form action="/predict" method="POST" id="predict-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="N">Nitrogen (N) — 0 to 150
+                        <span class="tooltip-icon" data-tip="Nitrogen promotes leaf and stem growth. Higher levels favor rice, sugarcane, and leafy crops. Low levels suit beans and lentils." tabindex="0">?</span>
+                    </label>
+                    <input type="number" step="any" min="0" max="150" class="form-control" id="N" name="N" placeholder="e.g. 90" required>
+                </div>
+                <div class="form-group">
+                    <label for="P">Phosphorus (P) — 0 to 150
+                        <span class="tooltip-icon" data-tip="Phosphorus supports root development and flowering. Essential for fruits, legumes, and grain crops." tabindex="0">?</span>
+                    </label>
+                    <input type="number" step="any" min="0" max="150" class="form-control" id="P" name="P" placeholder="e.g. 42" required>
+                </div>
+                <div class="form-group">
+                    <label for="K">Potassium (K) — 0 to 210
+                        <span class="tooltip-icon" data-tip="Potassium improves disease resistance and water regulation. Important for cotton, potato, and fruit trees." tabindex="0">?</span>
+                    </label>
+                    <input type="number" step="any" min="0" max="210" class="form-control" id="K" name="K" placeholder="e.g. 43" required>
+                </div>
+                <div class="form-group">
+                    <label for="temperature">Temperature (°C) — 5 to 50
+                        <span class="tooltip-icon" data-tip="Most crops grow best between 20-35°C. Tropical crops need 25°C+ while temperate crops prefer cooler weather." tabindex="0">?</span>
+                    </label>
+                    <input type="number" step="any" min="5" max="50" class="form-control" id="temperature" name="temperature" placeholder="e.g. 20.8" required>
+                </div>
+                <div class="form-group">
+                    <label for="humidity">Humidity (%) — 10 to 100
+                        <span class="tooltip-icon" data-tip="High humidity suits rice, coconut, and sugarcane. Low humidity is better for millets and groundnuts." tabindex="0">?</span>
+                    </label>
+                    <input type="number" step="any" min="10" max="100" class="form-control" id="humidity" name="humidity" placeholder="e.g. 82.0" required>
+                </div>
+                <div class="form-group">
+                    <label for="ph">pH Value — 0 to 14
+                        <span class="tooltip-icon" data-tip="Soil acidity/alkalinity. Most crops prefer 6.0-7.5. Blueberries like acidic soil (4.5-5.5), while alfalfa tolerates alkaline soil." tabindex="0">?</span>
+                    </label>
+                    <input type="number" step="any" min="0" max="14" class="form-control" id="ph" name="ph" placeholder="e.g. 6.5" required>
+                </div>
+                <div class="form-group full-width">
+                    <label for="rainfall">Rainfall (mm) — 10 to 350
+                        <span class="tooltip-icon" data-tip="Annual rainfall. Rice needs heavy rainfall (150mm+), while millet and sorghum can survive on lower amounts." tabindex="0">?</span>
+                    </label>
+                    <input type="number" step="any" min="10" max="350" class="form-control" id="rainfall" name="rainfall" placeholder="e.g. 202.9" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit" id="submit-btn">Predict Best Crop</button>
+        </form>
+    </div>
+    <script>
+        const form = document.getElementById('predict-form');
+        form.addEventListener('submit', function() {
+            document.getElementById('submit-btn').classList.add('loading');
+        });
+    </script>
+</body>
+</html>
