@@ -19,6 +19,5 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # IMPORTANT: Replace YOUR_USERNAME and YOUR_SPACE_NAME with your actual Hugging Face details
-          # Example: git push https://SRG2004:$HF_TOKEN@huggingface.co/spaces/SRG2004/crop-api main
-          git push https://SRG4545:$HF_TOKEN@huggingface.co/spaces/SRG4545/crop-recommendation-api main
+          # Pushing to Hugging Face Space: SRG4545/crop-recommendation-api
+          git push https://SRG4545:$HF_TOKEN@huggingface.co/spaces/SRG4545/crop-recommendation-api main --force
