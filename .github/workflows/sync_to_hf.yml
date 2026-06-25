@@ -23,4 +23,4 @@ jobs:
         run: |
           hf auth login --token $HF_TOKEN
           # Upload only backend files to avoid binary/image errors and save space
-          hf upload SRG4545/crop-recommendation-api . . --repo-type space --exclude "frontend/*" "static/*" "dataset/*" "templates/*" ".github/*" ".claude/*"
+          hf upload SRG4545/crop-recommendation-api . . --repo-type space --exclude "frontend/*" --exclude "static/*" --exclude "dataset/*" --exclude "templates/*" --exclude ".github/*" --exclude ".claude/*"
